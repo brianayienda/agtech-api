@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+
 
 class FarmerController extends Controller
 {
@@ -11,6 +13,7 @@ class FarmerController extends Controller
     {
         return User::where('role', 'farmer')->latest()->paginate(20);
     }
+
     public function store(Request $r)
     {
         $data = $r->validate([
@@ -21,15 +24,20 @@ class FarmerController extends Controller
         $data['role']     = 'farmer';
         return User::create($data);
     }
+
     public function show(User $user)
     {abort_unless($user->role === 'farmer', 404);return $user;}
+
     public function update(Request $r, User $user)
     {
         abort_unless($user->role === 'farmer', 404);
         $data = $r->validate([
-            'name'     => 'sometimes', 'email'      => ['sometimes', 'email', Rule::unique('users')->ignore($user->id)],
-            'password' => 'nullable|min:6', 'phone' => 'nullable',
+            'name'     => 'sometimes|string|max:255',
+            'email'    => ['sometimes', 'email', Rule::unique('users')->ignore($user->id)],
+            'password' => 'nullable|min:6',
+            'phone'    => 'nullable|string|max:20',
         ]);
+
         if (! empty($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }
@@ -37,6 +45,7 @@ class FarmerController extends Controller
         $user->update($data);
         return $user;
     }
+
     public function destroy(User $user)
     {
         abort_unless($user->role === 'farmer', 404);
