@@ -1,5 +1,11 @@
 <?php
-use App\Http\Controllers\{AuthController, FarmerController, CropController, DashboardController};
+use App\Http\Controllers\{
+    AuthController,
+    FarmerController,
+    CropController,
+    DashboardController,
+    ProfileController
+};
 
 Route::post('/register',[AuthController::class,'register']);
 Route::post('/login',[AuthController::class,'login']);
@@ -7,6 +13,10 @@ Route::post('/login',[AuthController::class,'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me',[AuthController::class,'me']);
     Route::post('/logout',[AuthController::class,'logout']);
+
+    // Profile Management (for any logged in user)
+    Route::get('/profile', [ProfileController::class,'show']);
+    Route::put('/profile', [ProfileController::class,'update']);
 
     // Dashboards
     Route::get('/dashboard/admin', [DashboardController::class,'admin'])->middleware('role:admin');
