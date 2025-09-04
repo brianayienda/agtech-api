@@ -7,14 +7,17 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function admin()
+    public function admin(Request $request)
     {
+        $admin = $request->user();
+
         return [
             'totalFarmers'   => User::where('role', 'farmer')->count(),
             'totalCrops'     => Crop::count(),
             'cropsPerFarmer' => User::where('role', 'farmer')
-                ->withCount('crops') // define relation below
+                ->withCount('crops') 
                 ->get(['id', 'name', 'crops_count']),
+            'profile'        => $admin->only('name', 'email', 'phone'),
         ];
     }
     public function farmer(Request $r)
