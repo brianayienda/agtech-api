@@ -1,4 +1,4 @@
-# Tech Stack Used Laravel and Vue.js
+# Tech Stack Used:  Laravel and Vue.js
 
 ## Prerequisites
 - PHP >= 8.1
